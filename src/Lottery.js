@@ -3,26 +3,36 @@ import LotteryBall from './LotteryBall'
 import './Lottery.css'
 
 class Lottery extends Component {
+    static defaultProps = {
+        numBalls: 6,
+        title: "Lotto",
+        maxNum: 40
+    }
     constructor(props) {
         super(props);
-        this.state = { num : 1 }
+        this.state = { nums: Array.from({ length: this.props.numBalls}) };
+        this.handleClick = this.handleClick.bind(this);
+    }
+    generate(){
+        this.setState(curState => ({
+            nums: curState.nums.map(
+                n => Math.floor(Math.random() * this.props.maxNum) + 1
+            )
+        }));
         
     }
-    displayBalls() {
-        for (let i = 0; i < this.props.numBalls; i++){
-            <LotteryBall />
-        }
+    handleClick(){
+        this.generate();
     }
+
     render () {
         return (
             <div className="Lottery">
                 <h1>{this.props.title}</h1>
-                <div className="Lottery-Balls">
-                    <LotteryBall />
-                    <LotteryBall />
-                    <LotteryBall />
+                <div>
+                    {this.state.nums.map(n => <LotteryBall num={n} />)}
                 </div>
-                <button>Generate</button>
+                <button onClick={this.handleClick}>Generate</button>
             </div>
         )
     }
